@@ -6342,7 +6342,7 @@ GameObject:
   - component: {fileID: 613244687}
   - component: {fileID: 613244686}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Pi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
