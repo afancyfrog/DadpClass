@@ -5,6 +5,8 @@ public class FPController : MonoBehaviour
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
     public float gravity = -9.81f; // simulate gravity, not a rigid body 
+    public float jumpHeight = 1.5f;
+
     [Header("Look Settings")]
     public Transform cameraTransform;
     public float lookSensitivity = 2f;
@@ -13,7 +15,12 @@ public class FPController : MonoBehaviour
     private Vector2 moveInput;
     private Vector2 lookInput;
     private Vector3 velocity; // move player around scene
-    private float verticalRotation = 0f; 
+    private float verticalRotation = 0f;
+
+    [Header("Shooting")]
+    public GameObject bulletPrefab;
+    public Transform gunPoint;
+
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -53,5 +60,35 @@ public class FPController : MonoBehaviour
         verticalLookLimit);
         cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+    public void OnJump(InputAction.CallbackContext context) 
+    { 
+        if (context.performed && controller.isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+    }
+
+    public void OnShoot(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Shoot();
+        }
+    }
+
+    private void Shoot()
+    {
+        if(bulletPrefab != null && gunPoint != null)
+        {
+            GameObject bullet = Instantiate(bulletPrefab, gunPoint.position, gunPoint.rotation);
+            Rigidbody rb = bullet.GetComponent<Rigidbody>();
+
+            if (rb != null)
+            {
+                rb.AddForce(gunPoint.forward * 3000f);
+            }
+        }
     }
 }
